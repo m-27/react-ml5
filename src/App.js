@@ -1,23 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useCallback } from 'react';
+import tiger from './tiger.jpg';
+import tigerD from './tiger_de.jpg';
+import * as ml5 from "ml5";
 
-function App() {
+const App = () => {
+
+  const modelLoaded = () => {
+    console.log(`Model Loaded!`);
+  }
+
+  const classifyImg = useCallback(() => {
+    const classifier = ml5.imageClassifier("MobileNet", modelLoaded);
+
+    const image = document.getElementById('image');
+    classifier.predict(image, 10, (err, res) => {
+      console.log(res);
+    })
+    // modelLoaded();
+
+  }, []);
+
+  useEffect(() => {
+    classifyImg();
+  }, [classifyImg])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+      <h1>Image classification with ML.js</h1>
+      <img src={tigerD} id="image" width="400" alt="" />
     </div>
   );
 }
